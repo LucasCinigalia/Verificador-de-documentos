@@ -14,7 +14,7 @@ public class AuditoriaService {
     private final EventoAuditoriaRepository repository;
     private final Clock clock;
 
-    public AuditoriaService(EventoAuditoriaRepository repository, Clock clock) {
+    AuditoriaService(EventoAuditoriaRepository repository, Clock clock) {
         this.repository = repository;
         this.clock = clock;
     }
