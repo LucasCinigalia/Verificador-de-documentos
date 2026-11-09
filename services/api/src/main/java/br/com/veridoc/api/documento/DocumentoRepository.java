@@ -4,5 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface DocumentoRepository extends JpaRepository<Documento, UUID> {
+/** Package-private: só o DocumentoService acessa a tabela documento. */
+interface DocumentoRepository extends JpaRepository<Documento, UUID> {
 }

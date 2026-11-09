@@ -22,8 +22,8 @@ public class DocumentoService {
     private final AuditoriaService auditoria;
     private final Clock clock;
 
-    public DocumentoService(DocumentoRepository repository, ArmazenamentoArquivos armazenamento,
-                            AuditoriaService auditoria, Clock clock) {
+    DocumentoService(DocumentoRepository repository, ArmazenamentoArquivos armazenamento,
+                     AuditoriaService auditoria, Clock clock) {
         this.repository = repository;
         this.armazenamento = armazenamento;
         this.auditoria = auditoria;
@@ -60,6 +60,23 @@ public class DocumentoService {
     public Documento buscar(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Documento %s não encontrado".formatted(id)));
+    }
+
+    /**
+     * Marca o documento como CONCLUIDO e devolve os dados que a decisão precisa.
+     *
+     * O saveAndFlush manda o UPDATE ao banco na hora, com "where versao = ?". Se duas
+     * requisições concluem o mesmo documento ao mesmo tempo, a segunda espera o lock da
+     * linha, encontra a versão já incrementada, não atualiza nada e recebe
+     * ObjectOptimisticLockingFailureException, antes de gravar análise ou decisão.
+     */
+    @Transactional
+    public DadosDeclarados concluirAnalise(UUID id) {
+        var documento = buscar(id);
+        documento.alterarStatus(StatusDocumento.CONCLUIDO, Instant.now(clock));
+        repository.saveAndFlush(documento);
+        return new DadosDeclarados(documento.getId(), documento.getTipo(),
+                documento.getCpfDeclarado(), documento.getNomeDeclarado());
     }
 
     /** Guarda só o nome do arquivo (sem diretórios) e limita o tamanho à coluna. */
