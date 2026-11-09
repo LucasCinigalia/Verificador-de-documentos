@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -31,13 +33,15 @@ public class Documento {
     @Column(name = "tamanho_bytes", nullable = false)
     private long tamanhoBytes;
 
-    @Column(nullable = false, columnDefinition = "char(64)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false, length = 64)
     private String sha256;
 
     @Column(name = "caminho_arquivo", nullable = false)
     private String caminhoArquivo;
 
-    @Column(name = "cpf_declarado", nullable = false, columnDefinition = "char(11)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "cpf_declarado", nullable = false, length = 11)
     private String cpfDeclarado;
 
     @Column(name = "nome_declarado", nullable = false)

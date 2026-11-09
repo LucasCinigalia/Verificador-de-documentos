@@ -1,0 +1,39 @@
+# Ambiente local do VeriDoc. Uso (na raiz do repositório):
+#   cp infra/compose/.env.example infra/compose/.env
+#   docker compose -f infra/compose/docker-compose.yml up --build
+name: veridoc
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: veridoc
+      POSTGRES_USER: veridoc
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD em infra/compose/.env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U veridoc -d veridoc"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ../../services/api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/veridoc
+      DB_USER: veridoc
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    volumes:
+      - api-arquivos:/var/lib/veridoc/arquivos
+
+volumes:
+  postgres-data:
+  api-arquivos:
