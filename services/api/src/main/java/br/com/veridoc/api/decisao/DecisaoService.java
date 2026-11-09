@@ -1,7 +1,6 @@
 package br.com.veridoc.api.decisao;
 
-import br.com.veridoc.api.analise.Analise;
-import br.com.veridoc.api.analise.AnaliseRepository;
+import br.com.veridoc.api.analise.AnaliseService;
 import br.com.veridoc.api.analise.DadosExtraidos;
 import br.com.veridoc.api.auditoria.AuditoriaService;
 import br.com.veridoc.api.auditoria.TipoEventoAuditoria;
@@ -22,16 +21,16 @@ import java.util.stream.Collectors;
 public class DecisaoService {
 
     private final DocumentoService documentoService;
-    private final AnaliseRepository analises;
+    private final AnaliseService analiseService;
     private final DecisaoRepository decisoes;
     private final MotorDeRisco motor;
     private final AuditoriaService auditoria;
     private final Clock clock;
 
-    public DecisaoService(DocumentoService documentoService, AnaliseRepository analises, DecisaoRepository decisoes,
-                          MotorDeRisco motor, AuditoriaService auditoria, Clock clock) {
+    DecisaoService(DocumentoService documentoService, AnaliseService analiseService, DecisaoRepository decisoes,
+                   MotorDeRisco motor, AuditoriaService auditoria, Clock clock) {
         this.documentoService = documentoService;
-        this.analises = analises;
+        this.analiseService = analiseService;
         this.decisoes = decisoes;
         this.motor = motor;
         this.auditoria = auditoria;
@@ -47,10 +46,8 @@ public class DecisaoService {
     @Transactional
     public Decisao registrarAnalise(UUID documentoId, DadosExtraidos dados) {
         var declarados = documentoService.concluirAnalise(documentoId);
+        analiseService.registrar(documentoId, dados);
         Instant agora = Instant.now(clock);
-
-        analises.save(new Analise(documentoId, dados, agora));
-        auditoria.registrar(documentoId, TipoEventoAuditoria.ANALISE_REGISTRADA, "Resultado da extração registrado");
 
         var contexto = new ContextoAvaliacao(declarados.tipo(), declarados.cpfDeclarado(),
                 declarados.nomeDeclarado(), dados, LocalDate.now(clock));

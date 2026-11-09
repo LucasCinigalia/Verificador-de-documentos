@@ -1,9 +1,5 @@
-package br.com.veridoc.api.analise;
+package br.com.veridoc.api.decisao;
 
-import br.com.veridoc.api.decisao.Decisao;
-import br.com.veridoc.api.decisao.DecisaoService;
-import br.com.veridoc.api.decisao.Motivo;
-import br.com.veridoc.api.decisao.ResultadoDecisao;
 import br.com.veridoc.api.documento.Documento;
 import br.com.veridoc.api.documento.StatusDocumento;
 import br.com.veridoc.api.documento.TransicaoDeStatusInvalidaException;
@@ -27,8 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AnaliseController.class)
-class AnaliseControllerTest {
+@WebMvcTest(ResultadoAnaliseController.class)
+class ResultadoAnaliseControllerTest {
 
     private static final String CORPO_VALIDO = """
             {"campos": {

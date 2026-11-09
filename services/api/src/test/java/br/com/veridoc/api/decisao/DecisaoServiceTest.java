@@ -1,6 +1,6 @@
 package br.com.veridoc.api.decisao;
 
-import br.com.veridoc.api.analise.AnaliseRepository;
+import br.com.veridoc.api.analise.AnaliseService;
 import br.com.veridoc.api.analise.CampoExtraido;
 import br.com.veridoc.api.analise.DadosExtraidos;
 import br.com.veridoc.api.auditoria.AuditoriaService;
@@ -43,7 +43,7 @@ class DecisaoServiceTest {
     private static final UUID DOCUMENTO_ID = UUID.randomUUID();
 
     @Mock private DocumentoService documentoService;
-    @Mock private AnaliseRepository analises;
+    @Mock private AnaliseService analiseService;
     @Mock private DecisaoRepository decisoes;
     @Mock private AuditoriaService auditoria;
 
@@ -52,7 +52,7 @@ class DecisaoServiceTest {
     @BeforeEach
     void setUp() {
         var motor = new MotorDeRisco(List.of(new CpfRegra()));
-        service = new DecisaoService(documentoService, analises, decisoes, motor, auditoria,
+        service = new DecisaoService(documentoService, analiseService, decisoes, motor, auditoria,
                 Clock.fixed(AGORA, ZoneOffset.UTC));
     }
 
@@ -65,7 +65,7 @@ class DecisaoServiceTest {
 
         assertThat(decisao.getResultado()).isEqualTo(ResultadoDecisao.REPROVADO);
         assertThat(decisao.getMotivos()).extracting(Motivo::codigo).containsExactly("CPF_DIVERGENTE");
-        verify(analises).save(any());
+        verify(analiseService).registrar(eq(DOCUMENTO_ID), any());
         verify(auditoria).registrar(eq(DOCUMENTO_ID), eq(TipoEventoAuditoria.DECISAO_TOMADA), anyString());
     }
 
@@ -76,7 +76,7 @@ class DecisaoServiceTest {
 
         assertThatThrownBy(() -> service.registrarAnalise(DOCUMENTO_ID, dadosComCpf("52998224725")))
                 .isInstanceOf(TransicaoDeStatusInvalidaException.class);
-        verify(analises, never()).save(any());
+        verify(analiseService, never()).registrar(any(), any());
         verify(decisoes, never()).save(any());
     }
 

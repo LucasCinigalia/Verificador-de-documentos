@@ -1,7 +1,5 @@
-package br.com.veridoc.api.analise;
+package br.com.veridoc.api.decisao;
 
-import br.com.veridoc.api.decisao.DecisaoResponse;
-import br.com.veridoc.api.decisao.DecisaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 /**
+ * Entrada do resultado da análise no domínio decisao (ADR 0005).
+ *
  * TEMPORÁRIO (ADR 0004): simula o agente de IA enquanto não há Kafka. Na Etapa 4 este
  * endpoint é substituído pelo consumidor de documento.analisado, que chama o mesmo serviço.
  */
@@ -22,11 +22,11 @@ import java.util.UUID;
         description = "Registra o resultado da extração manualmente; será substituído pelo Kafka na Etapa 4")
 @RestController
 @RequestMapping("/api/v1/documentos/{documentoId}/analise")
-public class AnaliseController {
+public class ResultadoAnaliseController {
 
     private final DecisaoService decisaoService;
 
-    public AnaliseController(DecisaoService decisaoService) {
+    ResultadoAnaliseController(DecisaoService decisaoService) {
         this.decisaoService = decisaoService;
     }
 
