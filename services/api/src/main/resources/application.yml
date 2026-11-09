@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: veridoc-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/veridoc}
+    username: ${DB_USER:veridoc}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  error:
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+veridoc:
+  fuso-horario: America/Sao_Paulo
+  armazenamento:
+    diretorio: ${ARMAZENAMENTO_DIRETORIO:./data/arquivos}
+  regras:
+    confianca-minima: 0.80
+    idade-minima: 18
