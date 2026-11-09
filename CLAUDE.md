@@ -145,6 +145,7 @@ Extras opcionais, depois das 9 etapas: Spring WebFlux, CQRS para a tela de consu
 - **Explique as decisões.** Quando houver escolha de arquitetura, apresente as opções e registre a decisão em `docs/adr/`.
 - **Testes fazem parte da etapa.** Escreva testes junto com o código e rode a suíte antes de dizer que terminou.
 - **Convenções:** Java 21 com records onde fizer sentido, pacotes por domínio, injeção por construtor, nada de segredo no código. Use português no domínio e nos documentos e inglês no código.
+- **Commits só na minha conta:** autor e committer `Lucas Cinigalia <150202188+LucasCinigalia@users.noreply.github.com>`. Nunca adicionar `Co-Authored-By`, `Claude-Session` ou qualquer outra linha de atribuição ao Claude em commits ou PRs.
 - **Ao fim de cada etapa:** resuma o que foi feito, o que aprendi e o que vem a seguir, e marque a etapa como concluída neste arquivo.
 
 ## Comandos úteis
