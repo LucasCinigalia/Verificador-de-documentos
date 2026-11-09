@@ -43,4 +43,8 @@ A API traduz o conflito em `409 Conflict` com ProblemDetail
   409 e uma única decisão no banco. Nessa corrida quem barrou foi a unique de
   `analise.documento_id`, porque o `INSERT` da análise chega ao banco antes do `UPDATE`
   versionado do documento. Por isso as camadas são complementares, e não redundantes.
+  *Atualização:* depois do ADR 0005 o documento é gravado primeiro. Repetindo o teste (3
+  rodadas de 10), cada rodada teve 1 sucesso e os demais 409 vieram do lock otimista
+  (requisições simultâneas) ou da máquina de estados (requisições que já leram `CONCLUIDO`),
+  sem nenhuma violação de unique.
 - Na Etapa 4, a idempotência do consumidor Kafka se apoia nessas mesmas três camadas.

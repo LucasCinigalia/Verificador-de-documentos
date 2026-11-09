@@ -81,6 +81,7 @@ cd services/api && ./mvnw test
 | [0002](docs/adr/0002-motor-de-regras-de-risco.md) | Motor de regras de risco |
 | [0003](docs/adr/0003-status-do-documento-e-lock-otimista.md) | Status do documento e lock otimista |
 | [0004](docs/adr/0004-entrada-temporaria-da-analise-e-armazenamento-local.md) | Entrada temporária da análise e armazenamento local |
+| [0005](docs/adr/0005-organizacao-em-pacotes-por-dominio.md) | Organização em pacotes por domínio, com fronteiras verificadas por ArchUnit |
 
 ## Roadmap
 
