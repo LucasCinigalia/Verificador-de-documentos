@@ -165,7 +165,7 @@ docker compose -f infra/compose/docker-compose.yml up --build
 
 ## Status
 
-- [ ] Etapa 1: API base (em andamento)
+- [x] Etapa 1: API base (concluída em 2026-11-09)
 - [ ] Etapa 2: Testes de integração e CI
 - [ ] Etapa 3: Segurança
 - [ ] Etapa 4: Mensageria
@@ -175,4 +175,8 @@ docker compose -f infra/compose/docker-compose.yml up --build
 - [ ] Etapa 8: Kubernetes
 - [ ] Etapa 9: GitOps e nuvem
 
-**Próximo passo:** concluir a Etapa 1.
+**Próximo passo:** Etapa 2, testes de integração com Testcontainers e CI no GitHub Actions.
+Pendências herdadas da Etapa 1 que entram na Etapa 2:
+- teste de integração que prove o conflito de concorrência no PostgreSQL real (ADR 0003);
+- teste que valide o schema (Flyway + `ddl-auto: validate`) e o mapeamento `jsonb`;
+- revisar o Dockerfile multi-stage (já existe, criado para o `docker compose up` da Etapa 1).

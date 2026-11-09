@@ -39,4 +39,8 @@ A API traduz o conflito em `409 Conflict` com ProblemDetail
 - O teste que prova o conflito real (duas transações no mesmo PostgreSQL) depende de banco de
   verdade e entra na Etapa 2 com Testcontainers. Na Etapa 1 há testes da máquina de estados e
   do mapeamento do erro para HTTP.
+- Teste manual com 10 análises simultâneas para o mesmo documento: 1 resposta 200, 9 respostas
+  409 e uma única decisão no banco. Nessa corrida quem barrou foi a unique de
+  `analise.documento_id`, porque o `INSERT` da análise chega ao banco antes do `UPDATE`
+  versionado do documento. Por isso as camadas são complementares, e não redundantes.
 - Na Etapa 4, a idempotência do consumidor Kafka se apoia nessas mesmas três camadas.
