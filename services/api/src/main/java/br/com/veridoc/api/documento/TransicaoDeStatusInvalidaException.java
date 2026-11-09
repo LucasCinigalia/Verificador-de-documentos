@@ -1,8 +1,12 @@
 package br.com.veridoc.api.documento;
 
-public class TransicaoDeStatusInvalidaException extends RuntimeException {
+import br.com.veridoc.api.compartilhado.CategoriaErro;
+import br.com.veridoc.api.compartilhado.ErroDeNegocioException;
+
+public class TransicaoDeStatusInvalidaException extends ErroDeNegocioException {
 
     public TransicaoDeStatusInvalidaException(StatusDocumento atual, StatusDocumento destino) {
-        super("Documento em %s não pode ir para %s".formatted(atual, destino));
+        super(CategoriaErro.CONFLITO, "transicao-de-status-invalida", "Transição de status inválida",
+                "Documento em %s não pode ir para %s".formatted(atual, destino));
     }
 }

@@ -1,7 +1,5 @@
 package br.com.veridoc.api.compartilhado;
 
-import br.com.veridoc.api.documento.ArquivoInvalidoException;
-import br.com.veridoc.api.documento.TransicaoDeStatusInvalidaException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,25 +26,21 @@ public class TratadorDeErros extends ResponseEntityExceptionHandler {
 
     private static final String BASE_TIPO = "urn:veridoc:problema:";
 
-    @ExceptionHandler(RecursoNaoEncontradoException.class)
-    ProblemDetail naoEncontrado(RecursoNaoEncontradoException e) {
-        return problema(HttpStatus.NOT_FOUND, "recurso-nao-encontrado", "Recurso não encontrado", e.getMessage());
-    }
-
-    @ExceptionHandler(TransicaoDeStatusInvalidaException.class)
-    ProblemDetail transicaoInvalida(TransicaoDeStatusInvalidaException e) {
-        return problema(HttpStatus.CONFLICT, "transicao-de-status-invalida", "Transição de status inválida", e.getMessage());
+    /** Uma regra para todas as exceções de negócio: a categoria decide o status HTTP. */
+    @ExceptionHandler(ErroDeNegocioException.class)
+    ProblemDetail erroDeNegocio(ErroDeNegocioException e) {
+        HttpStatus status = switch (e.getCategoria()) {
+            case NAO_ENCONTRADO -> HttpStatus.NOT_FOUND;
+            case CONFLITO -> HttpStatus.CONFLICT;
+            case REQUISICAO_INVALIDA -> HttpStatus.BAD_REQUEST;
+        };
+        return problema(status, e.getCodigo(), e.getTitulo(), e.getMessage());
     }
 
     @ExceptionHandler({ObjectOptimisticLockingFailureException.class, DataIntegrityViolationException.class})
     ProblemDetail conflitoDeConcorrencia(Exception e) {
         return problema(HttpStatus.CONFLICT, "conflito-de-concorrencia", "Conflito de concorrência",
                 "O documento foi alterado por outra requisição. Consulte o status e tente novamente se necessário.");
-    }
-
-    @ExceptionHandler(ArquivoInvalidoException.class)
-    ProblemDetail arquivoInvalido(ArquivoInvalidoException e) {
-        return problema(HttpStatus.BAD_REQUEST, "arquivo-invalido", "Arquivo inválido", e.getMessage());
     }
 
     @Override
